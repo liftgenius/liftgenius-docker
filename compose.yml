@@ -1,18 +1,17 @@
-version: '3.8'
 services:
-  npm:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: always
-    volumes:
-      - ./npm/data:/data
-      - ./npm/letsencrypt:/etc/letsencrypt
-    ports:
-      # These ports are in format <host-port>:<container-port>
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP
+  # npm:
+  #   image: 'jc21/nginx-proxy-manager:latest'
+  #   restart: always
+  #   volumes:
+  #     - ./npm/data:/data
+  #     - ./npm/letsencrypt:/etc/letsencrypt
+  #   ports:
+  #     # These ports are in format <host-port>:<container-port>
+  #     - '80:80' # Public HTTP Port
+  #     - '443:443' # Public HTTPS Port
+  #     - '81:81' # Admin Web Port
+  #     # Add any other Stream port you want to expose
+  #     # - '21:21' # FTP
 
     # Uncomment the next line if you uncomment anything in the section
     # environment:
@@ -29,9 +28,11 @@ services:
     command: rabbitmq-server
     volumes:
     - ./rabbitmq/data:/var/lib/rabbitmq:rw
-    - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-    - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    # - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    # - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
     ports:
+    - '80:80' # this is needed for OpenTofu provider w/o using NginxProxyManager
+    - '40128:40128' #this is needed for OpenTofu provider
     - '5672:5672'
     - '5673:5673'
     - '15672:15672'
@@ -54,7 +55,7 @@ services:
   #     POSTGRES_PASSWORD: $l0n!k1995
   #     REDMINE_DB_DATABASE: redmine
 
-networks:
-  default:
-    external: true
-    name: liftgenius-network
+# networks:
+#   default:
+#     external: true
+#     name: liftgenius-network
