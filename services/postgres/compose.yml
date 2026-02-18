@@ -1,0 +1,31 @@
+services:
+  ts-postgres:
+    image: tailscale/tailscale
+    container_name: ts-postgres
+    hostname: postgres
+    networks:
+      local_network:
+        ipv4_address: 10.5.0.12
+    ports:
+    - "5432:5432"
+    env_file:
+    - ../../.env
+    volumes:
+    - ./tailscale/state:/var/lib/tailscale
+    devices:
+    - /dev/net/tun:/dev/net/tun
+    cap_add:
+    - net_admin
+    - sys_module
+
+  postgres:
+    image: 'postgres:latest'
+    env_file:
+    - .env
+    volumes:
+    - ./dbdata:/var/lib/postgresql
+    network_mode: service:ts-postgres
+
+volumes:
+  ts-alpine:
+    driver: local

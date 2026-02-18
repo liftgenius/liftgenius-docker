@@ -1,61 +1,10 @@
-services:
-  # npm:
-  #   image: 'jc21/nginx-proxy-manager:latest'
-  #   restart: always
-  #   volumes:
-  #     - ./npm/data:/data
-  #     - ./npm/letsencrypt:/etc/letsencrypt
-  #   ports:
-  #     # These ports are in format <host-port>:<container-port>
-  #     - '80:80' # Public HTTP Port
-  #     - '443:443' # Public HTTPS Port
-  #     - '81:81' # Admin Web Port
-  #     # Add any other Stream port you want to expose
-  #     # - '21:21' # FTP
+include:
+- ${PWD}/services/rabbitmq/compose.yml
+- ${PWD}/services/localstack/compose.yml
+- ${PWD}/services/postgres/compose.yml
 
-    # Uncomment the next line if you uncomment anything in the section
-    # environment:
-      # Uncomment this if you want to change the location of
-      # the SQLite DB file within the container
-      # DB_SQLITE_FILE: "/data/database.sqlite"
-
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
-  
-  rabbitmq:
-    image: 'rabbitmq:3-management'
-    restart: always
-    command: rabbitmq-server
-    volumes:
-    - ./rabbitmq/data:/var/lib/rabbitmq:rw
-    # - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-    # - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
-    ports:
-    - '80:80' # this is needed for OpenTofu provider w/o using NginxProxyManager
-    - '40128:40128' #this is needed for OpenTofu provider
-    - '5672:5672'
-    - '5673:5673'
-    - '15672:15672'
-  
-  # redmine:
-  #   image: redmine
-  #   restart: always
-  #   volumes:
-  #   - ./redmine:/usr/src/redmine
-  #   ports:
-  #     - 3000:3000
-  #   environment:
-  #     REDMINE_DB_POSTGRES: db
-  #     REDMINE_DB_PASSWORD: R3dM!n3R0ck$
-
-  # db:
-  #   image: postgres
-  #   restart: always
-  #   environment:
-  #     POSTGRES_PASSWORD: $l0n!k1995
-  #     REDMINE_DB_DATABASE: redmine
-
-# networks:
-#   default:
-#     external: true
-#     name: liftgenius-network
+networks:
+  local_network:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
