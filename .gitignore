@@ -1,3 +1,2 @@
-npm/letsencrypt/
-npm/data/
-rabbitmq/data/
+services/*/*/
+*.env
