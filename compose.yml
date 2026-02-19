@@ -2,6 +2,7 @@ include:
 - ${PWD}/services/rabbitmq/compose.yml
 - ${PWD}/services/localstack/compose.yml
 - ${PWD}/services/postgres/compose.yml
+- ${PWD}/services/lambda/compose.yml
 
 networks:
   local_network:
